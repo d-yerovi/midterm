@@ -100,6 +100,7 @@ class App:
     def display_menu(self):
         logger = logging.getLogger(__name__)
         logger.info("Displaying menu...")
-        print("Available commands:")
+        print("Available commands: \n")
         for command, description in self.commands.items():
-            print(f"{command}: {description}")
+            print(f"{command.ljust(10)}: {description}")
+        print("\nType 'exit' to exit.")
