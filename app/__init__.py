@@ -61,7 +61,7 @@ class App:
         logger.info("Starting application...")
         print("Hello World. Type 'exit' to exit.")
         self.display_menu()
-
+        self.history = []  # Store calculation history
         while True:
             user_input = input(">>> ")
             if user_input.lower() == "exit":
@@ -70,6 +70,8 @@ class App:
                 break
             elif user_input.lower() == "menu":
                 self.display_menu()
+            elif user_input.lower() == "history":
+                self.display_history()
             else:
                 parts = user_input.split()
                 command = parts[0]
@@ -87,11 +89,17 @@ class App:
                     logger.warning("Unknown command. Type 'menu' to see available commands.")
                     print("Unknown command. Type 'enu' to see available commands.")
                 '''
+    def display_history(self):
+        print("Calculation History:")
+        for i, calculation in enumerate(self.history):
+            print(f"{i+1}. {calculation}")
+
     def execute_plugin(self, plugin, num1, num2):
         logger = logging.getLogger(__name__)
         try:
             result = plugin.execute(num1, num2)
             logger.info(f"Plugin {plugin.name} executed successfully with result {result}")
+            self.history.append(f"{plugin.name}({', '.join(map(str, (num1,num2)))}) = {result}")
             print(f"Result: {result}")
         except ValueError as e:
             logger.error(f"Error executing plugin {plugin.name}: {e}")
@@ -103,4 +111,4 @@ class App:
         print("Available commands: \n")
         for command, description in self.commands.items():
             print(f"{command.ljust(10)}: {description}")
-        print("\nType 'exit' to exit.")
+        print("\nType 'exit' to exit, 'menu' to display menu, or 'history' to display calculation history.")
