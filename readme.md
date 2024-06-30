@@ -77,7 +77,7 @@ The use of a pandas DataFrame to store the calculation history provides an effic
 
 The menu system provides a user-friendly interface for displaying available commands and executing plugins. This enables users to easily navigate the application and execute commands without knowing the implementation details of each plugin.
 
-**Understatnding Implementation**
+**Understanding Implementation**
 ---------------------------------
 
 ### Look Before You Leap (LBYL)
