@@ -78,9 +78,9 @@ class App:
                 self.command_handler.handle_command(command, *args)
 
     def display_history(self):
-        print("Calculation History:")
+        print("\n Calculation History: \n")
         print(self.history)
-        print("Available history commands: \n")
+        print("\n Available history commands: \n")
         for command, description in self.commands.items():
             if command in ["save_history", "load_history", "clear_history", "delete_history"]:
                 print(f"{command.ljust(15)}: {description}")
