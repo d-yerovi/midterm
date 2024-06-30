@@ -1,103 +1,78 @@
-# Advanced Python Calculator for Software Engineering Graduate Course
+**README.md**
+================
 
-## Project Overview
+**Setup Instructions**
+--------------------
 
-This midterm requires the development of an advanced Python-based calculator application. Designed to underscore the importance of professional software development practices, the application integrates clean, maintainable code, the application of design patterns, comprehensive logging, dynamic configuration via environment variables, sophisticated data handling with Pandas, and a command-line interface (REPL) for real-time user interaction.
-## Instructor Video - [here](https://youtu.be/hu9YFdeSkV8)
+1. Clone the repository: `git clone https://github.com/d-yerovi/midterm.git`
+2. Install the required packages: `pip install -r requirements.txt`
+3. Create a `.env` file in the root directory with the following variables:
+	* `DEBUG`: Set to `True` for debug mode, `False` otherwise
+	* `PLUGIN_DIR`: Set to the directory where your plugins are located (default is `plugins`)
+	* `ENVIRONMENT`: Set to `PRODUCTION` or `DEVELOPMENT` depending on your environment
+4. Create a `logging.conf` file in the root directory to configure logging (optional)
+5. Create and activate the virtual environment (VE).
+    * Create - `virtualenv venv` or `virtualenv -p python3`
+    * Activate - `source venv/bin/activate`
+    * Deactivate - `deactivate` 
 
-## Project Submission
+**Usage Examples**
+-----------------
 
-- Create a NEW repository from scratch and transfer any relevant work as you complete the assignment, **you need to show a clear history of work through your commits, or your project could be given as low as a 0 for not showing your work.**
-- Submit through a GitHub repository link containing the necessary documentation, configuration examples, and a coherent commit history.
-- You are required to write a short description and link to your implememtation of the design patterns you use.
-- You need to provide a description of how you used environment variables and link to your code to illustrate.
--  You need to explain and link to how you are using logging.
--  You need to link to and explain how you are using try/catch / exceptions to illustrate  "Look Before You Leap" (LBYL) and "Easier to Ask for Forgiveness than Permission" (EAFP)/
-- Create a 3-5 minute video demonstration of using the calculator, highlighting its key features and functionalities. Link the video to the repository readme.
--  Submit a link to your repository to Canvas.  
--  Keep your repository private while working on it, so people don't copy your work.  Make the repository public within a day of the project being due, so we can grade it.
-- **REQUIRED - YOU MUST USE GITHUB ACTIONS AND YOUR CODE MUST PASS ALL THE TESTS ON GITHUB**
+1. Run the application: `python main.py`
+2. Type `menu` to display the available commands
+3. Type `add 2 3` to execute the `add` plugin with arguments `2` and `3`
+4. Type `history` to display the calculation history and the history menu
+5. Type `exit` to exit the application
 
-## Core Functionalities
+**Architectural Decisions**
+-------------------------
 
-### Command-Line Interface (REPL)
+### Design Patterns
 
-Implement a Read-Eval-Print Loop (REPL) to facilitate direct interaction with the calculator. This interface should support:
-- Execution of arithmetic operations (Add, Subtract, Multiply, and Divide)
-- Management of calculation history.
-- Access to extended functionalities through dynamically loaded plugins.
+1. **Plugin Architecture**: The application uses a plugin architecture to allow for extensibility and modularity. Plugins are loaded dynamically from the `PLUGIN_DIR` directory, and each plugin is responsible for executing a specific command.
+2. **Command Pattern**: The `CommandHandler` class uses the command pattern to encapsulate the execution of plugins. This allows for a decoupling of the plugin execution from the application logic.
+3. **Factory Pattern**: The `load_plugins` function uses a factory pattern to create instances of plugins based on their names.
 
-### Plugin System
+### Logging Strategy
 
-Create a flexible plugin system to allow seamless integration of new commands or features. This system should:
-- Dynamically load and integrate plugins without modifying the core application code.
-- Include a REPL  "Menu" command to list all available plugin commands, ensuring user discoverability and interaction.
+1. **Logging Configuration**: The application uses a logging configuration file (`logging.conf`) to define the logging settings. This allows for flexibility in configuring the logging behavior.
+2. **Logger Hierarchy**: The application uses a logger hierarchy to organize log messages by module and level. This allows for fine-grained control over logging.
+3. **Log Levels**: The application uses the following log levels:
+	* `INFO`: For informational messages
+	* `WARNING`: For warning messages
+	* `ERROR`: For error messages
+4. **Log Messages**: Log messages are formatted to include the plugin name, command, and result (if applicable).
 
-### Calculation History Management with Pandas
+### Other Design Decisions
 
-Utilize Pandas to manage a robust calculation history, enabling users to:
-- Load, save, clear, and delete history records through the REPL interface.
+1. **Environment Variables**: The application uses environment variables to configure settings such as debug mode and plugin directory.
+2. **History Management**: The application uses a pandas DataFrame to store the calculation history. This allows for efficient storage and retrieval of history data.
+3. **Menu System**: The application uses a menu system to display available commands and provide a user-friendly interface.
 
+**In-Depth Analysis**
+---------------------
 
-### Professional Logging Practices
+### Plugin Architecture
 
-Establish a comprehensive logging system to record:
-- Detailed application operations, data manipulations, errors, and informational messages.
-- Differentiate log messages by severity (INFO, WARNING, ERROR) for effective monitoring.
-- Dynamic logging configuration through environment variables for levels and output destinations.
+The plugin architecture allows for extensibility and modularity by decoupling the plugin execution from the application logic. This enables developers to create new plugins without modifying the application code. The `load_plugins` function loads plugins dynamically from the `PLUGIN_DIR` directory, and each plugin is responsible for executing a specific command.
 
-### Advanced Data Handling with Pandas
+### Command Pattern
 
-Employ Pandas for:
-- Efficient data reading and writing to CSV files.
-- Managing calculation history.
+The command pattern encapsulates the execution of plugins, allowing for a decoupling of the plugin execution from the application logic. This enables the application to execute plugins without knowing the implementation details of each plugin.
 
-### Design Patterns for Scalable Architecture
+### Logging Strategy
 
-Incorporate key design patterns to address software design challenges, including:
-- **Facade Pattern:** Offer a simplified interface for complex Pandas data manipulations.
-- **Command Pattern:** Structure commands within the REPL for effective calculation and history management.
-- **Factory Method, Singleton, and Strategy Patterns:** Further enhance the application's code structure, flexibility, and scalability.
+The logging strategy provides a flexible and configurable way to manage log messages. The logging configuration file (`logging.conf`) allows developers to define the logging settings, and the logger hierarchy provides a way to organize log messages by module and level. The use of log levels (INFO, WARNING, ERROR) enables developers to control the verbosity of log messages.
 
-## Development, Testing, and Documentation Requirements
+### Environment Variables
 
-### Testing and Code Quality
+The use of environment variables provides a way to configure settings such as debug mode and plugin directory without modifying the application code. This enables developers to easily switch between different environments and configurations.
 
-- Achieve a minimum of 90% test coverage with Pytest.
-- Ensure code quality and adherence to PEP 8 standards, verified by Pylint.
+### History Management
 
-### Version Control Best Practices
+The use of a pandas DataFrame to store the calculation history provides an efficient way to store and retrieve history data. This enables the application to display the calculation history in a user-friendly format.
 
-- Utilize logical commits that clearly group feature development and corresponding tests, evidencing clear development progression.
+### Menu System
 
-### Comprehensive Documentation
-
-- Compile detailed documentation in `README.md`, covering setup instructions, usage examples, and an in-depth analysis of architectural decisions, particularly emphasizing the implementation and impact of chosen design patterns and the logging strategy.
-
-
-## Evaluation Criteria
-
-### Total Points: 100
-
-#### Functionality (40 Points)
-
-- **Calculator Operations:** 20 points for implementing basic and statistical operations.
-- **History Management:** 10 points for effective management using Pandas.
-- **Configuration via Environment Variables:** 5 points for flexible application configuration.
-- **REPL Interface:** 5 points for a user-friendly command-line interface.
-
-#### Design Patterns (20 Points)
-
-- **Implementation and Application:** 10 points for the effective use of design patterns.
-- **Documentation and Explanation:** 10 points for thorough documentation of design pattern rationale and implementation.
-
-#### Testing and Code Quality (20 Points)
-
-- **Comprehensive Testing with Pytest:** 10 points for extensive test coverage.
-- **Code Quality and Adherence to Standards:** 10 points for clean, maintainable code.
-
-#### Version Control, Documentation, and Logging (20 Points)
-
-- **Commit History:** 10 points for logical and informative commit messages.
-- **README Documentation:** 5 points for comprehensive setup and usage instructions.
-- **Logging Practices:** 5 points for implementing adaptable and informative logging.
+The menu system provides a user-friendly interface for displaying available commands and executing plugins. This enables users to easily navigate the application and execute commands without knowing the implementation details of each plugin.
