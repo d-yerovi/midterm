@@ -1,0 +1,5 @@
+Command,Arguments,Result
+add,"3, 4",7.0
+subtract,"29, 15",14.0
+multiply,"5, 5",25.0
+divide,"49, 7",7.0
