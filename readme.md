@@ -22,7 +22,7 @@
 1. Run the application: `python main.py`
 2. Type `menu` to display the available commands
 3. Type `add 2 3` to execute the `add` plugin with arguments `2` and `3`
-4. Type `history` to display the calculation history and the history menu
+4. Type `history` to display the calculation history and the history
 5. Type `exit` to exit the application
 
 **Architectural Decisions**
@@ -76,3 +76,54 @@ The use of a pandas DataFrame to store the calculation history provides an effic
 ### Menu System
 
 The menu system provides a user-friendly interface for displaying available commands and executing plugins. This enables users to easily navigate the application and execute commands without knowing the implementation details of each plugin.
+
+**Understatnding Implementation**
+---------------------------------
+
+### Look Before You Leap (LBYL)
+
+In LBYL, it check for potential errors or exceptions before attempting an operation. This approach is often used in languages like C, where error handling is more explicit.
+
+In the code, it is not explicitly using LBYL, but I could have done so by checking the length of the `args` list before executing the plugin, like this:
+
+![LBYL](LBYL.png "Look Before You Leap")
+
+By checking the length of `args` before executing the plugin, you're looking before you leap, ensuring that the operation will succeed.
+
+### Easier to Ask for Forgiveness than Permission (EAFP)
+
+In EAFP, it attempt an operation and then catch any exceptions that might occur. This approach is often used in languages like Python, where exceptions are a natural part of the language.
+
+In the code, I use EAFP when executing the plugin:
+
+![EAFP](EAFP.png "Easier to Ask for Forgiveness than Permission")
+
+Here, I was attempting to execute the plugin with the provided arguments, and if a `ValueError` occurs (e.g., because the arguments are not valid numbers), I catch the exception and handle it by logging an error and printing an error message.
+
+By using a try/except block, I am asking for forgiveness (i.e., handling the exception) rather than checking for permission (i.e., checking for errors before attempting the operation).
+
+In Python, EAFP is often preferred because it allows for more concise and expressive code, and it's often easier to handle exceptions than to anticipate all possible error scenarios.
+
+### Environment Variables
+
+In my application, I used environment variables to store configuration settings that can be easily changed without modifying the code. I used the `dotenv` library to load environment variables from a `.env` file.
+
+### Loading Environment Variables
+
+In the `App` class, I loaded environment variables using the `load_dotenv()` function from the `dotenv` library. This function loads environment variables from a `.env` file in the root directory of the project.
+
+### Accessing Environment Variables
+
+I accessed environment variables using the os module. I stored the loaded environment variables in a dictionary called `settings`.
+
+### Using Environment Variables
+
+I used environment variables to configure the application. For example, I used the DEBUG environment variable to determine whether to enable debug logging. I also used the `PLUGIN_DIR` environment variable to specify the directory where plugins are located.
+
+Here's an example of how I used the `ENVIRONMENT` environment variable:
+
+![AccessingEnvironmentVariables](AccessingEnvironmentVariables.png "Accessing/Loading Environment Variables")
+
+This sets the default environment to `PRODUCTION` if it's not already set.
+
+You can find the complete code in the `app.py` file, specifically in the `App` class.
