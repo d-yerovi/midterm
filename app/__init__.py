@@ -7,7 +7,7 @@ from app.plugin_loader import load_plugins
 import multiprocessing
 import os
 from dotenv import load_dotenv
-
+import pandas as pd
 
 class CommandHandler:
     def __init__(self, app):
@@ -25,7 +25,6 @@ class CommandHandler:
             logging.warning(f"Unknown command: {command}")
             print(f"Unknown command: {command}. Type 'menu' to see available commands.")
 
-
 class App:
     def __init__(self, plugin_folder):
         self.plugins = load_plugins(plugin_folder)
@@ -36,6 +35,7 @@ class App:
         self.settings = self.load_environment_variables()
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
         self.command_handler = CommandHandler(self)
+        self.history = pd.DataFrame(columns=['Command', 'Arguments', 'Result'])
 
     def configure_logging(self):
         logging_conf_path = 'logging.conf'
@@ -45,7 +45,7 @@ class App:
             logging.basicConfig(filename='app.log', level=logging.INFO)
             logging.info('Logging configured')
             logging.info('App started')
-    
+
     def load_environment_variables(self):
         settings = {}
         # Load environment variables from the operating system
@@ -61,7 +61,6 @@ class App:
         logger.info("Starting application...")
         print("Hello World. Type 'exit' to exit.")
         self.display_menu()
-        self.history = []  # Store calculation history
         while True:
             user_input = input(">>> ")
             if user_input.lower() == "exit":
@@ -77,30 +76,27 @@ class App:
                 command = parts[0]
                 args = parts[1:]
                 self.command_handler.handle_command(command, *args)
-                '''
-                for plugin in self.plugins:
-                    if user_input.startswith(plugin.name):
-                        _, num1, num2 = user_input.split()
-                        p = multiprocessing.Process(target=self.execute_plugin, args=(plugin, float(num1), float(num2)))
-                        p.start()
-                        logger.info(f"Executing plugin {plugin.name} with arguments {num1} and {num2}")
-                        break
-                else:
-                    logger.warning("Unknown command. Type 'menu' to see available commands.")
-                    print("Unknown command. Type 'enu' to see available commands.")
-                '''
+
     def display_history(self):
         print("Calculation History:")
-        for i, calculation in enumerate(self.history):
-            print(f"{i+1}. {calculation}")
+        print(self.history)
+        print("Available history commands: \n")
+        for command, description in self.commands.items():
+            if command in ["save_history", "load_history", "clear_history", "delete_history"]:
+                print(f"{command.ljust(15)}: {description}")
 
-    def execute_plugin(self, plugin, num1, num2):
+    def execute_plugin(self, plugin, *args):
         logger = logging.getLogger(__name__)
         try:
-            result = plugin.execute(num1, num2)
+            if plugin.name in ["add", "subtract", "multiply", "divide"]:
+                if len(args) != 2:
+                    raise ValueError("Two arguments are required for this plugin")
+                result = plugin.execute(float(args[0]), float(args[1]))
+            else:
+                result = plugin.execute(self.history)
             logger.info(f"Plugin {plugin.name} executed successfully with result {result}")
-            self.history.append(f"{plugin.name}({', '.join(map(str, (num1,num2)))}) = {result}")
-            print(f"Result: {result}")
+            self.history = self.history._append({'Command': plugin.name, 'Arguments': ', '.join(map(str, args)), 'Result': result}, ignore_index=True)
+            if plugin.name in ["add", "subtract", "multiply", "divide", "load_history"]: print(f"Result: {result}")
         except ValueError as e:
             logger.error(f"Error executing plugin {plugin.name}: {e}")
             print(f"Error: {e}")
@@ -110,5 +106,6 @@ class App:
         logger.info("Displaying menu...")
         print("Available commands: \n")
         for command, description in self.commands.items():
-            print(f"{command.ljust(10)}: {description}")
+            if command in ["add", "subtract", "multiply", "divide"]:
+                print(f"{command.ljust(10)}: {description}")
         print("\nType 'exit' to exit, 'menu' to display menu, or 'history' to display calculation history.")
