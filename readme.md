@@ -1,6 +1,11 @@
 **README.md**
 ================
 
+## Project Overview
+
+This midterm project its about the development of an advanced Python-based calculator application. Designed to underscore the importance of professional software development practices, the application integrates clean, maintainable code, the application of design patterns, comprehensive logging, dynamic configuration via environment variables, sophisticated data handling with Pandas, and a command-line interface (REPL) for real-time user interaction.
+## Presentation Video - [here](https://youtu.be/7emTPVEiEMU)
+
 **Setup Instructions**
 --------------------
 
@@ -22,7 +27,7 @@
 1. Run the application: `python main.py`
 2. Type `menu` to display the available commands
 3. Type `add 2 3` to execute the `add` plugin with arguments `2` and `3`
-4. Type `history` to display the calculation history and the history
+4. Type `history` to display the calculation history and the history menu commands
 5. Type `exit` to exit the application
 
 **Architectural Decisions**
