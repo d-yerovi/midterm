@@ -152,11 +152,12 @@ class App:
                     raise ValueError("Two arguments are required for this plugin")
                 # Execute the plugin with the two arguments
                 result = plugin.execute(float(args[0]), float(args[1]))
+                logger.info(f"Plugin {plugin.name} executed successfully with result {args[0]} -> {plugin.name} -> {args[1]} = {result}")
             else:
                 # Execute the plugin with the history
                 result = plugin.execute(self.history)
-            # Log the successful execution of the plugin
-            logger.info(f"Plugin {plugin.name} executed successfully with result {result}")
+                # Log the successful execution of the plugin
+                logger.info(f"Plugin {plugin.name} executed successfully")
             # Append the result to the history
             self.history = self.history._append({'Command': plugin.name, 'Arguments': ', '.join(map(str, args)), 'Result': result}, ignore_index=True)
             # Print the result for certain plugins
@@ -180,4 +181,4 @@ class App:
             if command in ["add", "subtract", "multiply", "divide"]:
                 print(f"{command.ljust(10)}: {description}")
         # Print additional menu options
-        print("\nType 'exit' to exit, 'menu' to display menu, or 'history' to display calculation history.")
+        print("\nType 'exit' to exit, 'menu' to display menu, or 'history' to display calculation history and history menu.")
